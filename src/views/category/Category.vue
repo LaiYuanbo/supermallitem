@@ -128,6 +128,9 @@ import BScroll from 'better-scroll'
       })
       this.bscroll.on("pullingUp",()=>{
         console.log('上拉加载更多');
+        setTimeout(()=>{
+          this.bscroll.finishPullUp()
+        },2000)
       })
     }
   }
