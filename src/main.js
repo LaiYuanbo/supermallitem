@@ -8,3 +8,11 @@ new Vue({
   render: h => h(App),
   router
 }).$mount('#app')
+
+import { request } from './network/request'
+
+// request({
+//   url:'home/multidata'  
+// }).then(res => {
+//   console.log('数据:',res);
+// })
