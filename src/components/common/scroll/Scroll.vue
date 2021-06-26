@@ -38,18 +38,26 @@ export default {
         // console.log(position);
         this.$emit("ascroll",position)
       })
-      //上拉加载更多
+      // 上拉加载更多
       this.scroll.on("pullingUp",()=>{
         this.$emit("spullingUp")
         // console.log("上拉加载");
       })
+      console.log(this.scroll);
     },
     methods:{
       scrollTo(x,y,time=300){
         this.scroll.scrollTo(x,y,time)
       },
+      refresh(){
+        
+        this.scroll.refresh()
+      },
       finishPullUp(){
         this.scroll.finishPullUp()
+      },
+      getScrollY(){
+        return this.scroll.y
       }
     }
 }

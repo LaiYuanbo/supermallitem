@@ -1,6 +1,7 @@
 <template>
-  <div class='goods-item'>
-    <img :src="goodslist.show.img" alt="">
+  <div class='goods-item' @click = "itemClick">
+    <!-- vue快键监听图片加载用@load -->
+    <img :src="goodslist.show.img" alt="" @load='imgload'>
     <div class='goods-info'>
       <p>{{goodslist.title}}</p>
       <span class='price' >{{goodslist.price}}</span>
@@ -18,6 +19,14 @@ export default {
         default(){
           return {}
         }
+      }
+    },
+    methods:{
+      imgload(){
+        this.$bus.$emit('itemImgLoad')
+      },
+      itemClick(){
+        this.$router.push('/detail/' + this.goodslist.iid)
       }
     }
 }
