@@ -43,7 +43,7 @@ export default {
         this.$emit("spullingUp")
         // console.log("上拉加载");
       })
-      console.log(this.scroll);
+      // console.log(this.scroll);
     },
     methods:{
       scrollTo(x,y,time=300){

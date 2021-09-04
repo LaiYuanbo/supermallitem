@@ -1,7 +1,7 @@
 <template>
   <div class='goods-item' @click = "itemClick">
     <!-- vue快键监听图片加载用@load -->
-    <img :src="goodslist.show.img" alt="" @load='imgload'>
+    <img :src="showImg" alt="" @load='imgload'>
     <div class='goods-info'>
       <p>{{goodslist.title}}</p>
       <span class='price' >{{goodslist.price}}</span>
@@ -21,6 +21,11 @@ export default {
         }
       }
     },
+    computed:{
+      showImg(){
+        return this.goodslist.image || this.goodslist.show.img
+      }
+  },
     methods:{
       imgload(){
         this.$bus.$emit('itemImgLoad')
@@ -37,7 +42,7 @@ export default {
     padding-bottom: 40px;
     position: relative;
 
-    width: 48%;
+    width: 100%;
   }
 
   .goods-item img {

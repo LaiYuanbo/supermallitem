@@ -10,7 +10,7 @@
         />
     </div>
     <scroll class="content" 
-    ref='top'
+    ref='scroll'
     :probe-type = '3'
     @ascroll = 'contentScroll'
     :pullload = 'true'
@@ -18,7 +18,6 @@
     >
       <home-swiper :banners="banners"  
       @imageItemLoad="imageItemLoad"
-      
       />
       <home-recommend-view :recommends='recommends' />
       <feature-view/>
@@ -48,7 +47,8 @@ import BackTop from "components/content/backTop/BackTop"
 
 
 import { getHomeMultidata,getHomeGoods } from "network/home.js";
-import { debounce } from 'common/utils.js'
+// import { debounce } from 'common/utils.js'
+import {itemListenMixin} from "common/mixin.js"
 
 export default {
   name: "Home",
@@ -65,9 +65,12 @@ export default {
       showBackTop:false,
       offsetTop: null,
       isTabControl: false,
-      scrolly:0
+      scrolly:0,
+      goodsdata:[]
+      // itemImgListener: null
     };
   },
+  mixins:[itemListenMixin],
   components: {
     HomeSwiper,
     HomeRecommendView,
@@ -78,34 +81,37 @@ export default {
     Scroll,
     BackTop,
     getHomeGoods,
+    
   },
   computed:{
     showGoods(){
+     
       return this.goods[this.currentType].list
     }
   },
   created() {       
     // 网络请求相关的
+    console.log('数据：',this.goods[this.currentType].list);
     //1.请求多个数据
     this.getHomeMultidata()
     //2.请求商品数据
     this.getHomeGoods('pop')
     this.getHomeGoods('new')
     this.getHomeGoods('sell')
+    // this.goodsdata = this.goods[this.currentType].list
   },
   mounted(){
-    //监听item中图片加载完成
-    const refresh = debounce(this.$refs.top.refresh,200)
-    this.$bus.$on("itemImgLoad",()=>{
-      refresh();
-    })
+    
   },
   activated(){
-      this.$refs.top.scroll.scrollTo(0,this.scrolly,200)
-      this.$refs.top.refresh()
+      this.$refs.scroll.scroll.scrollTo(0,this.scrolly,200)
+      this.$refs.scroll.refresh()
   },
   deactivated(){
-    this.scrolly = this.$refs.top.getScrollY()
+    this.scrolly = this.$refs.scroll.getScrollY()
+
+    //取消全局监听
+    this.$bus.$off('itemImgLoad',this.itemImgListener)
     
   },
   methods:{
@@ -126,7 +132,7 @@ export default {
       this.$refs.tabControl2.currentIndex = index; 
     },
     backTop(){
-      this.$refs.top.scrollTo(0,0)
+      this.$refs.scroll.scrollTo(0,0)
     },
     contentScroll(position){
          this.showBackTop = (-position.y) > 1000
@@ -136,17 +142,17 @@ export default {
     loadMore(){
       this.getHomeGoods(this.currentType)
       console.log("上拉加载");
-      this.$refs.top.finishPullUp()
+      this.$refs.scroll.finishPullUp()
     },
     imageItemLoad(){
         this.offsetTop = this.$refs.tabControl2.$el.offsetTop
-        console.log(this.offsetTop);
+        // console.log(this.offsetTop);
     },
 
     /**网络请求 */
     getHomeMultidata(){
       getHomeMultidata().then((res) => {
-      console.log("home:",res);
+      // console.log("home:",res);
       // this.result = res;
       this.banners = res.data.banner.list;
       this.recommends = res.data.recommend.list;

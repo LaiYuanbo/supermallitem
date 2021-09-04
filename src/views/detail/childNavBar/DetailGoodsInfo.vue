@@ -1,14 +1,14 @@
 <template>
-  <div class="detailGoodsInfo" >
-    <div class="desc">{{ detailGoodsInfo.desc }}</div>
-    <div v-for="item in detailGoodsInfo.detailImage[0].list" >
+  <div class="detailGoodsInfo" v-if="detailGoodsInfo.detailImage" >
+    <div class="desc" >{{ detailGoodsInfo.desc }}</div>
+    <div  v-for="item in detailGoodsInfo.detailImage[0].list" >
       <img  class="defailImage" :src="item" alt="" @load = 'imgLoad' />
     </div>
   </div>
 </template>
 
 <script>
-// import debounce from "@/common/utils";
+import {debounce} from "common/utils";
 
 export default {
   name: "DetailGoodsInfo",
@@ -28,17 +28,14 @@ export default {
   },
   methods: {
     imgLoad() {
-      this.counter += 1;
-      if(this.counter === this.imgLength){
-          this.$emit("imgLoad");
-      }
+      // console.log("111");
+      this.$emit("imageLoad");
+      // debounce(() => {
+      //   this.$emit("imageLoad");        
+      // }, 500);
     },
   },
-  watched:{
-    detailGoodsInfo(){
-        this.imgLength = this.detailGoodsInfo.detailImage[0].list
-    }
-  }
+  watched:{ }
 };
 </script>
 
